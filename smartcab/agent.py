@@ -35,7 +35,7 @@ class LearningAgent(Agent):
         ##########
 
         # Update epsilon using a decay function of your choice
-        self.epsilon = self.epsilon - 0.05
+        self.epsilon = self.epsilon - 0.002
 
         # Update additional class parameters as needed
         # N/A
@@ -260,8 +260,8 @@ def run():
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05
     #   n_test     - discrete number of testing trials to perform, default is 0
     sim.run(
-        n_test = 100,
-        tolerance = 0.025
+        n_test = 10,
+        tolerance = 0.001
     )
 
 
