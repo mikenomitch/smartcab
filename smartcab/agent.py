@@ -144,7 +144,9 @@ class LearningAgent(Agent):
 
         pick_random = self.epsilon >= random.random()
         if (not self.learning) or pick_random:
-            action = random_action
+            end_index = len(self.valid_actions) - 1
+            # picking a random action from the valid ones
+            action = self.valid_actions[random.randint(0,end_index)]
         else:
             aciton = self.get_max_action(state)
 
@@ -178,7 +180,7 @@ class LearningAgent(Agent):
         return
 
 
-    def default_dict:
+    def default_dict(self):
         return dict({
             'left': 0.0,
             'right': 0.0,
