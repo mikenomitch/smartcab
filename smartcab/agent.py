@@ -18,6 +18,7 @@ class LearningAgent(Agent):
         self.Q = dict()          # Create a Q-table which will be a dictionary of tuples
         self.epsilon = epsilon   # Random exploration factor
         self.alpha = alpha       # Learning factor
+        self.trial_number = 0    # Number of trials done (for decay function)
 
         # Set any additional class parameters as needed
 
@@ -35,7 +36,12 @@ class LearningAgent(Agent):
         ##########
 
         # Update epsilon using a decay function of your choice
-        self.epsilon = self.epsilon - 0.002
+
+        # linear decay
+        # self.epsilon = self.epsilon - 0.005
+
+        # z curve decay
+        self.epsilon = self.z_curve_decay()
 
         # Update additional class parameters as needed
         # N/A
@@ -47,6 +53,31 @@ class LearningAgent(Agent):
 
 
         return None
+
+    def z_curve_decay(self):
+        trial_number = self.trial_number
+        if trial_number > 100:
+            return 0.00001
+
+        # more negative numbers shift the curve right
+        shift_curve = -100
+        # higher numbers lengthen the curve
+        curve_stretcher = 5
+        sigmoid_x_imput = (trial_number + shift_curve) * curve_stretcher
+
+        lowest_possible_epsilon = 0.0001
+        y_shifter = (1 + lowest_possible_epsilon)
+
+        s_curve_flipper = -1
+        range_shrinker = 0.5
+
+        standard_sigmoid = 1 / (1 + math.exp(-sigmoid_x_imput))
+
+        new_epsilon = (range_shrinker * s_curve_flipper * standard_sigmoid) + y_shifter
+
+        # original sigmoid function: y = 1 / (1 + math.exp(-x))
+
+        return new_epsilon
 
     def build_state(self):
         """ The build_state function is called when the agent requests data from the
@@ -63,7 +94,13 @@ class LearningAgent(Agent):
         ##########
 
         # Set 'state' as a tuple of relevant data for the agent
-        state = (waypoint, inputs['light'], inputs['left'], inputs['right'], inputs['oncoming'])
+        state = (
+            waypoint,
+            inputs['light'],
+            inputs['left'],
+            inputs['right'],
+            inputs['oncoming']
+        )
 
         # When learning, check if the state is in the Q-table
         #   If it is not, create a dictionary in the Q-table for the current 'state'
@@ -198,6 +235,10 @@ class LearningAgent(Agent):
         self.createQ(state)                 # Create 'state' in Q-table
         action = self.choose_action(state)  # Choose an action
         reward = self.env.act(self, action) # Receive a reward
+
+        # update the trial number so we can change epsilon accordingly
+        self.trial_number = self.trial_number + 1
+
         self.learn(state, action, reward)   # Q-learn
 
         return
@@ -260,8 +301,8 @@ def run():
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05
     #   n_test     - discrete number of testing trials to perform, default is 0
     sim.run(
-        n_test = 10,
-        tolerance = 0.001
+        tolerance = 0.01,
+        n_test = 100
     )
 
 
