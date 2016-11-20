@@ -40,7 +40,7 @@ class LearningAgent(Agent):
         # DONE
 
         # Update epsilon using a decay function of your choice
-        self.epsilon = self.epsilon - 0.01
+        self.epsilon = self.epsilon - 0.05
 
         # Update additional class parameters as needed
         # ????
@@ -77,12 +77,7 @@ class LearningAgent(Agent):
         #   For each action, set the Q-value for the state-action pair to 0
 
         if self.learning and state not in self.Q:
-            self.Q[state] = dict({
-                'left': 0,
-                'right': 0,
-                'forward': 0,
-                None: 0
-            })
+            self.Q[state] = self.default_dict()
 
         return state
 
@@ -99,12 +94,7 @@ class LearningAgent(Agent):
 
         # Calculate the maximum Q-value of all actions for a given state
         if state not in self.Q.keys():
-            self.Q = dict({
-                'left': 0.0,
-                'right': 0.0,
-                'forward': 0.0,
-                None: 0.0
-            })
+            self.Q = self.default_dict()
 
         maxQ = None
         actionsForState = self.Q[state]
@@ -117,12 +107,7 @@ class LearningAgent(Agent):
 
     def get_max_action(self, state):
         if state not in self.Q.keys():
-            self.Q = dict({
-                'left': 0.0,
-                'right': 0.0,
-                'forward': 0.0,
-                None: 0.0
-            })
+            self.Q = self.default_dict()
 
         max_action = self.valid_actions[random.randint(0,3)]
         maxReward = float("-inf")
@@ -149,12 +134,7 @@ class LearningAgent(Agent):
         #   Then, for each action available, set the initial Q-value to 0.0
 
         if self.learning and state not in self.Q:
-            self.Q[state] = dict({
-                'left': 0.0,
-                'right': 0.0,
-                'forward': 0.0,
-                None: 0.0
-            })
+            self.Q[state] = self.default_dict()
 
         return
 
@@ -204,21 +184,26 @@ class LearningAgent(Agent):
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
 
         if state not in self.Q:
-            self.Q[state] = dict({
-                'left': 0.0,
-                'right': 0.0,
-                'forward': 0.0,
-                None: 0.0
-            })
+            self.Q[state] = self.default_dict()
 
         old_val = self.Q[state][action]
         alpha = self.alpha
 
         # ...is this what I'm supposed to do ???
         new_val = old_val + (alpha * (reward - old_val))
+
         self.Q[state][action] = new_val
 
         return
+
+
+    def default_dict:
+        return dict({
+            'left': 0.0,
+            'right': 0.0,
+            'forward': 0.0,
+            None: 0.0
+        })
 
 
     def update(self):
@@ -275,7 +260,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=20)
+    sim.run(n_test=10)
 
 
 if __name__ == '__main__':
