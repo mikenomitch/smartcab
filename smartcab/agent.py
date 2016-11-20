@@ -38,10 +38,10 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
 
         # linear decay
-        # self.epsilon = self.epsilon - 0.005
+        self.epsilon = self.epsilon - 0.005
 
-        # z curve decay
-        self.epsilon = self.z_curve_decay()
+        # some new decay
+        # self.epsilon = self.z_curve_decay()
 
         # Update additional class parameters as needed
         # N/A
@@ -53,31 +53,6 @@ class LearningAgent(Agent):
 
 
         return None
-
-    def z_curve_decay(self):
-        trial_number = self.trial_number
-        if trial_number > 100:
-            return 0.00001
-
-        # more negative numbers shift the curve right
-        shift_curve = -100
-        # higher numbers lengthen the curve
-        curve_stretcher = 5
-        sigmoid_x_imput = (trial_number + shift_curve) * curve_stretcher
-
-        lowest_possible_epsilon = 0.0001
-        y_shifter = (1 + lowest_possible_epsilon)
-
-        s_curve_flipper = -1
-        range_shrinker = 0.5
-
-        standard_sigmoid = 1 / (1 + math.exp(-sigmoid_x_imput))
-
-        new_epsilon = (range_shrinker * s_curve_flipper * standard_sigmoid) + y_shifter
-
-        # original sigmoid function: y = 1 / (1 + math.exp(-x))
-
-        return new_epsilon
 
     def build_state(self):
         """ The build_state function is called when the agent requests data from the
