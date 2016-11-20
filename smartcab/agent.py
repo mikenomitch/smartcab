@@ -148,7 +148,7 @@ class LearningAgent(Agent):
             # picking a random action from the valid ones
             action = self.valid_actions[random.randint(0,end_index)]
         else:
-            aciton = self.get_max_action(state)
+            action = self.get_max_action(state)
 
         return action
 
