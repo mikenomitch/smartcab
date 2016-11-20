@@ -18,7 +18,7 @@ class LearningAgent(Agent):
         self.Q = dict()          # Create a Q-table which will be a dictionary of tuples
         self.epsilon = epsilon   # Random exploration factor
         self.alpha = alpha       # Learning factor
-        self.trial_number = 0    # Number of trials done (for decay function)
+        self.trial_number = 1    # Number of trials done (for decay function)
 
         # Set any additional class parameters as needed
 
@@ -38,10 +38,13 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
 
         # linear decay
-        self.epsilon = self.epsilon - 0.005
+        # self.epsilon = self.epsilon - 0.005
 
-        # some new decay
-        # self.epsilon = self.z_curve_decay()
+        # exponential decay
+        # self.epsilon = 1 / (self.trial_number ** 1.1)
+
+        # arccos decay
+        self.epsilon = self.cos_decay()
 
         # Update additional class parameters as needed
         # N/A
@@ -53,6 +56,20 @@ class LearningAgent(Agent):
 
 
         return None
+
+
+    def cos_decay(self):
+        epsilon = self.epsilon
+        goal_attempts = 100
+
+        x_slider = (1/goal_attempts) * self.trial_number
+        x_coefficient = math.pi
+        cos_input = x_slider * x_coefficient
+
+        shrink_range = 0.5
+        shift_up = 0.5
+
+        return (math.cos(cos_input) * shrink_range) + shift_up
 
     def build_state(self):
         """ The build_state function is called when the agent requests data from the
