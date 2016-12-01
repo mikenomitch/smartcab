@@ -18,7 +18,7 @@ class LearningAgent(Agent):
         self.Q = dict()          # Create a Q-table which will be a dictionary of tuples
         self.epsilon = epsilon   # Random exploration factor
         self.alpha = alpha       # Learning factor
-        self.trial_number = 1    # Number of trials done (for decay function)
+        self.trial_number = 0    # Number of trials done
 
         # Set any additional class parameters as needed
 
@@ -27,6 +27,9 @@ class LearningAgent(Agent):
         """ The reset function is called at the beginning of each trial.
             'testing' is set to True if testing trials are being used
             once training trials have completed. """
+
+        # update the trial number so we can change epsilon accordingly
+        self.trial_number = self.trial_number + 1
 
         # Select the destination as the new location to route to
         self.planner.route_to(destination)
@@ -37,14 +40,20 @@ class LearningAgent(Agent):
 
         # Update epsilon using a decay function of your choice
 
+        # Note: some of these options were taken from/inspired by ShirleyLau222
+
+        coeff = .000001
+
         # linear decay
-        # self.epsilon = self.epsilon - 0.005
+        self.epsilon = self.epsilon - 0.001
 
-        # exponential decay
-        # self.epsilon = 1 / (self.trial_number ** 1.1)
+        # exponential decays
+        # self.epsilon = float(1)/float((self.trial_number)**coeff)
+        # self.epsilon = float(coeff)**float(self.trial_number)
+        # self.epsilon = float(1)/math.exp(float(coeff*self.trial_number))
 
-        # arccos decay
-        self.epsilon = self.cos_decay()
+        # geometric decays
+        # self.epsilon = float(math.cos(coeff*self.trial_number))
 
         # Update additional class parameters as needed
         # N/A
@@ -57,19 +66,6 @@ class LearningAgent(Agent):
 
         return None
 
-
-    def cos_decay(self):
-        epsilon = self.epsilon
-        goal_attempts = 100
-
-        x_slider = (1/goal_attempts) * self.trial_number
-        x_coefficient = math.pi
-        cos_input = x_slider * x_coefficient
-
-        shrink_range = 0.5
-        shift_up = 0.5
-
-        return (math.cos(cos_input) * shrink_range) + shift_up
 
     def build_state(self):
         """ The build_state function is called when the agent requests data from the
@@ -191,7 +187,7 @@ class LearningAgent(Agent):
         ## DONE ##
         ##########
         # When learning, implement the value iteration update rule
-        #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
+        #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')\
 
         # set default dictionary in case none exists
         if state not in self.Q:
@@ -227,9 +223,6 @@ class LearningAgent(Agent):
         self.createQ(state)                 # Create 'state' in Q-table
         action = self.choose_action(state)  # Choose an action
         reward = self.env.act(self, action) # Receive a reward
-
-        # update the trial number so we can change epsilon accordingly
-        self.trial_number = self.trial_number + 1
 
         self.learn(state, action, reward)   # Q-learn
 
@@ -281,7 +274,7 @@ def run():
     #   optimized    - set to True to change the default log file name
     sim = Simulator(
         env,
-        update_delay = 0.001,
+        update_delay = 0.0001,
         log_metrics = True,
         display = False,
         optimized = True
@@ -293,8 +286,8 @@ def run():
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05
     #   n_test     - discrete number of testing trials to perform, default is 0
     sim.run(
-        tolerance = 0.01,
-        n_test = 100
+        tolerance = 0.001,
+        n_test = 20
     )
 
 
