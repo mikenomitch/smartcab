@@ -253,7 +253,7 @@ def run():
     agent = env.create_agent(
         LearningAgent,
         learning = True,
-        alpha = 0.8,
+        alpha = 0.6,
         epsilon = 1
     )
 
@@ -287,7 +287,7 @@ def run():
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05
     #   n_test     - discrete number of testing trials to perform, default is 0
     sim.run(
-        tolerance = 0.025,
+        tolerance = 0.001,
         n_test = 100
     )
 
