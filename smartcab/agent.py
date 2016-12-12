@@ -44,12 +44,12 @@ class LearningAgent(Agent):
 
 
         # simple linear decay
-        self.epsilon = self.epsilon - 0.001
+        self.epsilon = self.epsilon - 0.0005
 
-        # coeff = .000001
+        # coeff = 1.2
 
         # exponential decays
-        # self.epsilon = float(1)/float((self.trial_number)**coeff)
+        # self.epsilon = 1 -float(1)/float((self.trial_number)**coeff)
         # self.epsilon = float(coeff)**float(self.trial_number)
         # self.epsilon = float(1)/math.exp(float(coeff*self.trial_number))
 
@@ -287,7 +287,7 @@ def run():
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05
     #   n_test     - discrete number of testing trials to perform, default is 0
     sim.run(
-        tolerance = 0.001,
+        tolerance = 0.0001,
         n_test = 100
     )
 
