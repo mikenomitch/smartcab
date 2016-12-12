@@ -44,7 +44,7 @@ class LearningAgent(Agent):
 
 
         # simple linear decay
-        self.epsilon = self.epsilon - 0.00225
+        self.epsilon = self.epsilon - 0.001
 
         # coeff = .000001
 
@@ -241,7 +241,7 @@ def run():
     #   num_dummies - discrete number of dummy agents in the environment, default is 100
     #   grid_size   - discrete number of intersections (columns, rows), default is (8, 6)
     env = Environment(
-        verbose = True
+        verbose = False
     )
 
     ##############
@@ -275,7 +275,7 @@ def run():
     #   optimized    - set to True to change the default log file name
     sim = Simulator(
         env,
-        update_delay = 0.0001,
+        update_delay = 0.00001,
         log_metrics = True,
         display = False,
         optimized = True
@@ -287,7 +287,7 @@ def run():
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05
     #   n_test     - discrete number of testing trials to perform, default is 0
     sim.run(
-        tolerance = 0.1,
+        tolerance = 0.025,
         n_test = 100
     )
 
