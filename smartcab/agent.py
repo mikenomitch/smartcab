@@ -208,7 +208,7 @@ class LearningAgent(Agent):
             # using gamma significantly improves quality of results but told to not use it
             # new_q_value_sans_weighting = reward + (discount_factor * self.get_maxQ(state))
 
-            new_q_value = old_q_value + (learning_rate * reward)
+            new_q_value = old_q_value + (learning_rate * (reward - old_q_value))
             self.Q[state][action] = new_q_value
 
         return
